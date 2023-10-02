@@ -63,7 +63,13 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.getAllUsers = async (req, res, next) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}).select([
+            "email",
+            "username",
+            "avatarImg",
+            "_id",
+            "names"
+        ]);
         res.json({status: true, users});
     } catch(error) {
         console.error('Something went wrong!', error);
