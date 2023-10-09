@@ -75,3 +75,26 @@ module.exports.getAllUsers = async (req, res, next) => {
         console.error('Something went wrong!', error);
     }
 }
+
+
+module.exports.updateAvatar = async (req, res, next) => {
+    try {
+        const { userId, avatar } = req.body;
+
+        const user = await User.findById(userId);
+    
+        if(!user) {
+            return res.status(404).json({ message: 'User not found', status: false });
+        }
+
+        user.avatarImg = avatar;
+
+        await user.save();
+
+        return res.json({message:'User info updated', status: true, user});
+
+
+    } catch (err) {
+        next(err);
+    }
+}

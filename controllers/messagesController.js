@@ -7,7 +7,7 @@ module.exports.addMessage = async (req, res, next) => {
         const data = await messageModel.create({
             message: { text: message},
             users: [from, to],
-            sender: from
+            sender: from,
         });
         if( data ) {
             return res.json({msg:"Message adedd successfully"})
@@ -31,6 +31,8 @@ module.exports.getAllMessages = async (req, res, next) => {
             return {
                 fromSelf: msg.sender.toString() === from,
                 message: msg.message.text,
+                id: msg._id,
+                date: msg.createdAt,
             };
         });
         res.json(projectMessages);
