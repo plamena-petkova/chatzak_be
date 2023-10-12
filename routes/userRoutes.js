@@ -7,6 +7,7 @@ router.post("/register", register);
 router.post("/login", login);
 router.get("/users/:userId", getUserById);
 router.get("/all-users", getAllUsers);
+router.put("/users/:userId", updateAvatar);
 
 module.exports = router;
  

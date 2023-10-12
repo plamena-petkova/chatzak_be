@@ -40,13 +40,17 @@ module.exports.login = async (req, res, next) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.json({ msg: "Incorrect username or password", status: false });
+      return res
+      .status(404)
+      .json({ msg: "Incorrect username or password", status: false });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.json({ msg: "Incorrect username or password", status: false });
+      return res
+      .status(404)
+      .json({ msg: "Incorrect username or password", status: false });
     }
 
     delete user.password;
@@ -67,18 +71,25 @@ module.exports.getAllUsers = async (req, res, next) => {
       "names",
     ]);
     res.json({ status: true, users });
+    
+    if (!users) {
+      return res
+        .status(404)
+        .json({ message: "Users not found", status: false });
+    }
   } catch (error) {
     console.error("Something went wrong!", error);
   }
 };
 
-/*
+
 module.exports.updateAvatar = async (req, res, next) => {
     try {
         const { userId, avatar } = req.body;
 
+        if (mongoose.Types.ObjectId.isValid(userId)) {
         const user = await User.findById(userId);
-    
+
         if(!user) {
             return res.status(404).json({ message: 'User not found', status: false });
         }
@@ -89,12 +100,12 @@ module.exports.updateAvatar = async (req, res, next) => {
 
         return res.json({message:'User info updated', status: true, user});
 
-
+      }
     } catch (err) {
         next(err);
     }
 }
-*/
+
 
 module.exports.getUserById = async (req, res, next) => {
   try {
