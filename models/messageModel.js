@@ -4,6 +4,7 @@ const MessageSchema = mongoose.Schema(
   {
     message: {
       text: { type: String, required: true },
+      isRemoved: { type: Boolean, required: true, default: false },
     },
     users: Array,
     sender: {

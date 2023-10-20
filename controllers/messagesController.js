@@ -25,6 +25,7 @@ module.exports.deleteMessage = async (req, res, next) => {
     const message = await Message.findById(messageId);
 
     message.message.text = "Removed message";
+    message.message.isRemoved = true;
     message.save();
 
     return res.json({ msg: "Message successfully deleted", message });
@@ -47,6 +48,7 @@ module.exports.getAllMessages = async (req, res, next) => {
         fromSelf: msg.sender.toString() === from,
         message: msg.message.text,
         id: msg._id,
+        isRemoved: msg.message.isRemoved,
         date: msg.createdAt,
       };
     });
