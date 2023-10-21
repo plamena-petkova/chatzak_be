@@ -48,5 +48,12 @@ io.on("connection", (socket) => {
             socket.to(sendUserSocket).emit("msg-receive", data.message);
         }
     });
+    socket.on("edit-msg", (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if(sendUserSocket) {
+            socket.to(sendUserSocket).emit("msg-edited", data.message);
+        }
+    });
+
 });
 

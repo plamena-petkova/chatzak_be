@@ -5,7 +5,7 @@ const router = require("express").Router();
 
 router.post("/addMsg", addMessage);
 router.post("/getMsg", getAllMessages);
-router.put("/message/:messageId", deleteMessage)
+router.patch("/message/:messageId", deleteMessage)
 
 
 module.exports = router;
