@@ -36,28 +36,27 @@ const io = socket(server, {
   },
 });
 
-global.onlineUsers = new Map();
+
+const onlineUsers = new Map();
+const users = new Map();
 
 io.on("connection", (socket) => {
-  global.chatSocket = socket;
+
   socket.on("add-user", (newUserId) => {
     onlineUsers.set(newUserId, socket.id);
-    const users = Array.from(onlineUsers).map(([userId, socketId]) => {
-        return { userId, socketId };
-      });
-    io.emit("update-users", users);
+    users.set(socket.id, newUserId);
+    io.emit("update-users", Object.fromEntries(users));
   });
 
   socket.on("disconnect", () => {
-    const users = Array.from(onlineUsers).map(([userId, socketId]) => {
-        return { userId, socketId };
-      });
-    const usersOnline = users.filter((user) => user.socketId !== socket.id)
-    io.emit('update-users', usersOnline);
+    users.delete(socket.id);
+    io.emit('update-users',  Object.fromEntries(users));
+    
   });
 
   socket.on("send-msg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
+    console.log('SendMessage', sendUserSocket);
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit("msg-receive", data.message);
     }
