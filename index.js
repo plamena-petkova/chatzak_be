@@ -13,6 +13,7 @@ app.use(express.json());
 app.use("/api/auth", userRoute);
 app.use("/api/messages", messagesRoute);
 
+
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
