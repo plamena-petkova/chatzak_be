@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const userRoute = require("../chatzak_be/routes/userRoutes");
 const messagesRoute = require("../chatzak_be/routes/messagesRoutes");
 const socket = require("socket.io");
+const serverless = require("serverless-http");
 const app = express();
 require("dotenv").config();
 
@@ -11,8 +12,8 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", userRoute);
-app.use("/api/messages", messagesRoute);
+app.use("/.netlify/functions/api/auth", userRoute);
+app.use("/.netlify/functions/api/messages", messagesRoute);
 
 
 mongoose
@@ -70,5 +71,6 @@ io.on("connection", (socket) => {
   });
 });
 
-
+module.exports = app;
+module.exports.handler = serverless(app);
 
