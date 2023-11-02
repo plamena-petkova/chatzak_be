@@ -1,6 +1,4 @@
-[functions-build]
-  command = "npm run build"
+[build]
   functions = "src"
-environment = { NODE_ENV: "production" }
 
   
