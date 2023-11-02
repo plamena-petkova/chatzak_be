@@ -1,8 +1,10 @@
 [build]
     functions = "src"
 
-[build.environment]
-NODE_VERSION = "16.16"
+[[redirects]]
+to="/.netlify/functions/api/:splat"
+from="/*"
+status=200
 
-[dev]
-  publish = "dist"
+
+  
