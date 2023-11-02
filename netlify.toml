@@ -1,2 +1,8 @@
 [build]
     functions = "src"
+
+[build.environment]
+NODE_VERSION = "16.16"
+
+[dev]
+  publish = "dist"

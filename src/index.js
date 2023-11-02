@@ -69,6 +69,5 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports = app;
 module.exports.handler = serverless(app);
 
