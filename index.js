@@ -7,7 +7,11 @@ const socket = require("socket.io");
 const app = express();
 require("dotenv").config();
 
-app.use(cors());
+const corsOptions = {
+  origin:'https://chatzak.netlify.app'
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/auth", userRoute);
