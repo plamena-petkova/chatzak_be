@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "build": "netlify build --context deploy-preview",
+    "build": "echo Building Functions",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

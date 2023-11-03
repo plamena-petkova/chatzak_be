@@ -1,4 +1,10 @@
-[build]
-  functions = "src"
+[functions]
+  external_node_modules = ["express"]
+  node_bundler = "esbuild"
+[[redirects]]
+  force = true
+  from = "/src/*"
+  status = 200
+  to = "/.netlify/functions/src/:splat"
 
   
