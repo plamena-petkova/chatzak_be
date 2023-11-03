@@ -1,12 +1,13 @@
-[functions]
+ [build]
+  functions="src"
+  [settings]
+  node_version = "16"
+[[redirects]]
+   from = "/*"
+  to = "/index.html"
+  status = 200
+ [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
-[[redirects]]
-  force = true
-  from = "/src/*"
-  status = 200
-  to = "/.netlify/functions/:splat"
-  [build]
-  functions="src"
 
   
