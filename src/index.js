@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const userRoute = require("../src/routes/userRoutes");
 const messagesRoute = require("../src/routes/messagesRoutes");
 const socket = require("socket.io");
-const serverless = require("serverless-http");
 const app = express();
 require("dotenv").config();
 
@@ -69,5 +68,4 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports.handler = serverless(app);
 
