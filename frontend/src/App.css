@@ -1,0 +1,7 @@
+
+aside {
+    position: absolute;
+    top: -490px;
+    z-index: 100;
+    max-width: 270px;
+}

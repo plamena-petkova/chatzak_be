@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const path = require('path');
+const path = require("path");
 const userRoute = require("./routes/userRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const socket = require("socket.io");
@@ -10,7 +10,6 @@ const compression = require("compression");
 const app = express();
 require("dotenv").config();
 
-/*
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
@@ -22,17 +21,6 @@ mongoose
   .catch((e) => {
     console.log("Error", e);
   });
-  */
-
-  const connectDB = async () => {
-    try {
-      const conn = await mongoose.connect(process.env.MONGO_URL);
-      console.log(`DB connection succesfully!`);
-    } catch (error) {
-      console.log(error);
-      process.exit(1);
-    }
-  }
 
 app.use(compression());
 
@@ -44,20 +32,28 @@ app.use(express.json());
 app.use("/api/auth", userRoute);
 app.use("/api/messages", messagesRoute);
 
-/*
+// --------------------------deployment------------------------------
+
+const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+// --------------------------deployment------------------------------
 
 const server = app.listen(process.env.PORT, () => {
   console.log(`Server is running on port:${process.env.PORT}`);
 });
-*/
 
-let server;
-
-connectDB().then(() => {
-  server = app.listen(process.env.PORT, () => {
-      console.log(`Server is running on port:${process.env.PORT}`);
-  })
-})
 const io = socket(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -65,12 +61,10 @@ const io = socket(server, {
   },
 });
 
-
 const onlineUsers = new Map();
 const users = new Map();
 
 io.on("connection", (socket) => {
-
   socket.on("add-user", (newUserId) => {
     onlineUsers.set(newUserId, socket.id);
     users.set(socket.id, newUserId);
@@ -79,8 +73,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     users.delete(socket.id);
-    io.emit('update-users',  Object.fromEntries(users));
-    
+    io.emit("update-users", Object.fromEntries(users));
   });
 
   socket.on("send-msg", (data) => {
@@ -96,5 +89,3 @@ io.on("connection", (socket) => {
     }
   });
 });
-
-
