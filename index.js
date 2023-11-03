@@ -4,9 +4,11 @@ const mongoose = require("mongoose");
 const userRoute = require("./routes/userRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const socket = require("socket.io");
+
 const compression = require("compression");
 const app = express();
 require("dotenv").config();
+
 
 app.use(compression());
 
