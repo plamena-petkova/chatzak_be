@@ -10,17 +10,7 @@ const compression = require("compression");
 const app = express();
 require("dotenv").config();
 
-
-app.use(compression());
-
-app.use(express.static(path.join(__dirname, "public")));
-
-app.use(cors());
-app.use(express.json());
-
-app.use("/api/auth", userRoute);
-app.use("/api/messages", messagesRoute);
-
+/*
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
@@ -32,11 +22,42 @@ mongoose
   .catch((e) => {
     console.log("Error", e);
   });
+  */
+
+  const connectDB = async () => {
+    try {
+      const conn = await mongoose.connect(process.env.MONGO_URL);
+      console.log(`DB connection succesfully!`);
+    } catch (error) {
+      console.log(error);
+      process.exit(1);
+    }
+  }
+
+app.use(compression());
+
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/auth", userRoute);
+app.use("/api/messages", messagesRoute);
+
+/*
 
 const server = app.listen(process.env.PORT, () => {
   console.log(`Server is running on port:${process.env.PORT}`);
 });
+*/
 
+let server;
+
+connectDB().then(() => {
+  server = app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port:${process.env.PORT}`);
+  })
+})
 const io = socket(server, {
   cors: {
     origin: "http://localhost:3000",
