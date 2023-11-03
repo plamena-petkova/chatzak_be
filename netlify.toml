@@ -5,6 +5,8 @@
   force = true
   from = "/src/*"
   status = 200
-  to = "/.netlify/functions/src/:splat"
+  to = "/.netlify/functions/:splat"
+  [build]
+  functions="src"
 
   
