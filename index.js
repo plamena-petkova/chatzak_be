@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require('path');
 const userRoute = require("./routes/userRoutes");
 const messagesRoute = require("./routes/messagesRoutes");
 const socket = require("socket.io");
@@ -11,6 +12,8 @@ require("dotenv").config();
 
 
 app.use(compression());
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 app.use(express.json());
