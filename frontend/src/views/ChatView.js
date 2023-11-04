@@ -92,7 +92,7 @@ function ChatView() {
         setArrivalMsg({ fromSelf: false, message: data.message });
       });
       socket.on("msg-edited", (data) => {
-        setArrivalMsg({ fromSelf: false, message: data.message });
+        setArrivalMsg({ fromSelf: false, message: data });
       });
       socket.on('update-users', (users) => {
         dispatch(setOnlineUsers(users));
