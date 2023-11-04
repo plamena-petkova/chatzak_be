@@ -10,11 +10,11 @@ import HomeView from "./views/HomeView";
 
 function App() {
   return (
-    <BrowserRouter basename="/api">
+    <BrowserRouter basename="/">
         <Routes>
           <Route path="/" element={<HomeView />} />
-          <Route path="/auth/login" element={<LoginView />} />
-          <Route path="/auth/register" element={<RegisterView />} />
+          <Route path="/login" element={<LoginView />} />
+          <Route path="/register" element={<RegisterView />} />
           <Route element={<PrivateRoutes />}>
             <Route path="/chat" element={<ChatView />} />
           </Route>
