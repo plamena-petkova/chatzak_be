@@ -12,7 +12,7 @@ function App() {
   return (
     <BrowserRouter basename="/api">
         <Routes>
-          <Route path="/api" element={<HomeView />} />
+          <Route path="/" element={<HomeView />} />
           <Route path="/auth/login" element={<LoginView />} />
           <Route path="/auth/register" element={<RegisterView />} />
           <Route element={<PrivateRoutes />}>
