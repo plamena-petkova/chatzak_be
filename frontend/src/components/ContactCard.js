@@ -1,6 +1,7 @@
 import { Avatar, Badge, Tab } from "@mui/joy";
 import { useSelector } from "react-redux";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import { useMediaQuery } from "@mui/material";
 
 function ContactCard({ contact }) {
   const onlineUsers = useSelector((state) => state.auth.onlineUsers);
@@ -9,8 +10,13 @@ function ContactCard({ contact }) {
     (state) => state.chat.newMessageIndicator
   );
 
+  const isSmallScreen = useMediaQuery("(max-width:899px)");
+
   return (
-    <Tab key={contact._id} sx={{ minWidth: 270 }}>
+    <Tab
+      key={contact._id}
+      sx={isSmallScreen ? { maxWidth: 140 } : { minWidth: 270 }}
+    >
       {onlineUser ? (
         <Badge
           badgeInset="14%"
@@ -34,7 +40,7 @@ function ContactCard({ contact }) {
         </Avatar>
       )}
 
-      {contact.names}
+      {isSmallScreen? contact.names.split(' ')[0] : contact.names}
       {contact._id === newMessageIndicator[contact._id]?.chatId &&
       newMessageIndicator[contact._id].show === true ? (
         <ChatBubbleOutlineOutlinedIcon

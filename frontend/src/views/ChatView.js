@@ -1,18 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Box,
-  TabList,
-  TabPanel,
-  Tabs,
-  Chip,
-  Button,
-} from "@mui/joy";
+import { Box, TabList, TabPanel, Tabs, Button, Typography } from "@mui/joy";
 import Header from "../components/Header";
 import { useEffect, useRef, useState } from "react";
 import { sendMessageRoute } from "../utils/apiRoutes";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { createAvatar, fetchUsers, getUserById, setOnlineUsers } from "../store/authReducer";
+import {
+  createAvatar,
+  fetchUsers,
+  getUserById,
+  setOnlineUsers,
+} from "../store/authReducer";
 import {
   deleteMessage,
   getAllMessages,
@@ -24,7 +22,7 @@ import ContactCard from "../components/ContactCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { v4 as uuidv4 } from "uuid";
 import { socket } from "../socket";
-import { useMediaQuery } from "@mui/material";
+import { Paper } from "@mui/material";
 
 function ChatView() {
   const dispatch = useDispatch();
@@ -33,7 +31,9 @@ function ChatView() {
   const currentUser = useSelector((state) => state.auth.user);
   const messages = useSelector((state) => state.chat.messages);
   const allUsers = useSelector((state) => state.auth.allUsers);
-  const newMessageIndicator = useSelector((state) => state.chat.newMessageIndicator);
+  const newMessageIndicator = useSelector(
+    (state) => state.chat.newMessageIndicator
+  );
   const [message, setMessage] = useState("");
   const [arrivalMsg, setArrivalMsg] = useState("");
   const [value, setValue] = useState(0);
@@ -44,8 +44,6 @@ function ChatView() {
   const [messageDeleted, setMessageDeleted] = useState(false);
   const [dataMessage, setDataMessage] = useState({});
   const [doScroll, setDoScroll] = useState(true);
-
-  const isSmallScreen = useMediaQuery("(max-width:899px)");
 
   useEffect(() => {
     if (currentUser._id && !socket.connected) {
@@ -66,23 +64,34 @@ function ChatView() {
       to: currentChat?._id,
     };
     dispatch(getAllMessages(data));
-  }, [currentChat, message, currentUser, messageDeleted, dispatch]);
+  }, [currentChat, message, currentUser, messageDeleted, dispatch, doScroll]);
 
   useEffect(() => {
-    if(currentChat._id !== dataMessage.from) {
-      dispatch(setNewMessageIndicator({chatId:dataMessage.from, show:true }));
-  }
-    if(currentChat._id === newMessageIndicator[currentChat._id]?.chatId && newMessageIndicator[currentChat._id]?.show === true) {
-        dispatch(setNewMessageIndicator({ chatId: currentChat._id, show: false}));
+    if (currentChat._id !== dataMessage.from) {
+      dispatch(
+        setNewMessageIndicator({ chatId: dataMessage.from, show: true })
+      );
     }
-    if(dataMessage.from && newMessageIndicator[currentChat._id]?.show === true) {
-      dispatch(setNewMessageIndicator({ chatId: currentChat._id, show: false}));
+    if (
+      currentChat._id === newMessageIndicator[currentChat._id]?.chatId &&
+      newMessageIndicator[currentChat._id]?.show === true
+    ) {
+      dispatch(
+        setNewMessageIndicator({ chatId: currentChat._id, show: false })
+      );
+    }
+    if (
+      dataMessage.from &&
+      newMessageIndicator[currentChat._id]?.show === true
+    ) {
+      dispatch(
+        setNewMessageIndicator({ chatId: currentChat._id, show: false })
+      );
       setDataMessage({});
     }
-    if(dataMessage.from === currentChat._id) {
+    if (dataMessage.from === currentChat._id) {
       setDataMessage({});
     }
-   
   }, [currentChat, setDataMessage, dataMessage]);
 
   useEffect(() => {
@@ -94,11 +103,11 @@ function ChatView() {
       socket.on("msg-edited", (data) => {
         setArrivalMsg({ fromSelf: false, message: data });
       });
-      socket.on('update-users', (users) => {
+      socket.on("update-users", (users) => {
         dispatch(setOnlineUsers(users));
-      })
+      });
     }
-  
+
     if (!currentUser.avatarImg)
       dispatch(createAvatar({ currentUser }))
         .unwrap()
@@ -117,7 +126,6 @@ function ChatView() {
       socket.emit("add-user", currentUser._id);
     }
   }, [currentChat]);
-
 
   useEffect(() => {
     arrivalMsg && setMessage((prev) => [...prev, arrivalMsg]);
@@ -155,7 +163,9 @@ function ChatView() {
       to: currentChat._id,
       from: currentUser._id,
     });
-    setDoScroll(true);
+    if (!messageDeleted) {
+      setDoScroll(true);
+    }
   };
 
   const handleShowRemoveIcon = (messageId) => {
@@ -169,11 +179,10 @@ function ChatView() {
   };
 
   useEffect(() => {
-    if(doScroll) {
+    if (doScroll) {
       scrollableContainerRef.current.scrollTop =
-      scrollableContainerRef.current.scrollHeight;
+        scrollableContainerRef.current.scrollHeight;
     }
-   
   }, [handleSendMsg]);
 
   return (
@@ -199,7 +208,7 @@ function ChatView() {
         onChange={handleChangeTab}
         aria-label="Vertical tabs"
         variant="scrollable"
-        orientation={isSmallScreen ? "horizontal" : "vertical"}
+        orientation="vertical"
         value={value}
         ref={scrollableContainerRef}
       >
@@ -211,7 +220,7 @@ function ChatView() {
             return <ContactCard key={contact._id} contact={contact} />;
           })}
         </TabList>
-        <TabPanel value={value} key={uuidv4()}>
+        <TabPanel sx={{ maxWidth: "70vw" }} value={value} key={uuidv4()}>
           {messages.length > 0 &&
             messages.map((msg) => {
               if (msg.fromSelf) {
@@ -228,15 +237,44 @@ function ChatView() {
                     }}
                   >
                     <Box sx={{ display: "flex", flexDirection: "row" }}>
-                      <Chip
-                        variant="outlined"
-                        color="primary"
-                        size="lg"
-                        disabled={msg.isRemoved}
+                      <Paper
                         onClick={() => handleShowRemoveIcon(msg.id)}
+                        variant="outlined"
+                        sx={{
+                          whiteSpace: "normal",
+                          maxWidth: 700,
+                          borderRadius: "18px",
+                          p: 0.5,
+                          cursor: "pointer",
+                        }}
+                        disabled={msg.isRemoved}
                       >
-                        {msg.message}
-                      </Chip>
+                        {msg.isRemoved ? (
+                          <Typography
+                            sx={{
+                              mr: 1,
+                              ml: 1,
+                              color: "lightgrey",
+                              fontWeight: "lg",
+                              fontSize: "sm",
+                            }}
+                          >
+                            {msg.message}
+                          </Typography>
+                        ) : (
+                          <Typography
+                            sx={{
+                              mr: 1,
+                              ml: 1,
+                              color: "green",
+                              fontWeight: "lg",
+                              fontSize: "sm",
+                            }}
+                          >
+                            {msg.message}
+                          </Typography>
+                        )}
+                      </Paper>
 
                       {msg.id === showRemoveIcon.id &&
                       !msg.isRemoved &&
@@ -260,18 +298,48 @@ function ChatView() {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      mt: 3,
-                      mb: 3,
+                      mt: 2,
+                      mb: 2,
+                      alignItems: "start",
                     }}
                   >
-                    <Chip
-                      label="success"
-                      color="success"
+                    <Paper
+                      onClick={() => handleShowRemoveIcon(msg.id)}
                       variant="outlined"
+                      sx={{
+                        whiteSpace: "normal",
+                        maxWidth: 700,
+                        borderRadius: "18px",
+                        p: 0.5,
+                      }}
                       disabled={msg.isRemoved}
                     >
-                      {msg.message}
-                    </Chip>
+                      {msg.isRemoved ? (
+                        <Typography
+                          sx={{
+                            mr: 1,
+                            ml: 1,
+                            color: "lightgrey",
+                            fontWeight: "lg",
+                            fontSize: "sm",
+                          }}
+                        >
+                          {msg.message}
+                        </Typography>
+                      ) : (
+                        <Typography
+                          sx={{
+                            mr: 1,
+                            ml: 1,
+                            color: "blue",
+                            fontWeight: "lg",
+                            fontSize: "sm",
+                          }}
+                        >
+                          {msg.message}
+                        </Typography>
+                      )}
+                    </Paper>
                   </Box>
                 );
               }
@@ -286,3 +354,24 @@ function ChatView() {
 }
 
 export default ChatView;
+
+/*
+       <Chip
+                        variant="outlined"
+                        color="primary"
+                        size="lg"
+                        disabled={msg.isRemoved}
+                        onClick={() => handleShowRemoveIcon(msg.id)}
+                      >
+                        {msg.message}
+                      </Chip>
+
+                              <Chip
+                      label="success"
+                      color="success"
+                      variant="outlined"
+                      disabled={msg.isRemoved}
+                    >
+                      {msg.message}
+                    </Chip>
+*/
