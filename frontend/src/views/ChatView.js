@@ -163,27 +163,25 @@ function ChatView() {
       to: currentChat._id,
       from: currentUser._id,
     });
-    if (!messageDeleted) {
-      setDoScroll(true);
-    }
+    setDoScroll(true);
   };
 
   const handleShowRemoveIcon = (messageId) => {
+    setDoScroll(false);
     setShowRemoveIcon({ id: messageId, show: true });
     if (messageId === showRemoveIcon.id) {
       const showIcon = { ...showRemoveIcon };
       showIcon.show = !showIcon.show;
       setShowRemoveIcon(showIcon);
     }
-    setDoScroll(false);
   };
 
   useEffect(() => {
-    if (doScroll) {
+    if (scrollableContainerRef.current && doScroll) {
       scrollableContainerRef.current.scrollTop =
         scrollableContainerRef.current.scrollHeight;
     }
-  }, [handleSendMsg]);
+  }, [handleSendMsg, doScroll]);
 
   return (
     <Box
@@ -275,7 +273,6 @@ function ChatView() {
                           </Typography>
                         )}
                       </Paper>
-
                       {msg.id === showRemoveIcon.id &&
                       !msg.isRemoved &&
                       showRemoveIcon.show ? (
@@ -354,24 +351,3 @@ function ChatView() {
 }
 
 export default ChatView;
-
-/*
-       <Chip
-                        variant="outlined"
-                        color="primary"
-                        size="lg"
-                        disabled={msg.isRemoved}
-                        onClick={() => handleShowRemoveIcon(msg.id)}
-                      >
-                        {msg.message}
-                      </Chip>
-
-                              <Chip
-                      label="success"
-                      color="success"
-                      variant="outlined"
-                      disabled={msg.isRemoved}
-                    >
-                      {msg.message}
-                    </Chip>
-*/

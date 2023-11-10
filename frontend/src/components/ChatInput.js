@@ -65,6 +65,7 @@ function ChatInput({ handleSendMsg }) {
             onClick={sendChat}
             variant="soft"
             endDecorator={<SendIcon />}
+            disabled={msg.length < 1}
           ></Button>
         }
       />
