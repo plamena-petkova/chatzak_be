@@ -64,7 +64,7 @@ function ChatView() {
       to: currentChat?._id,
     };
     dispatch(getAllMessages(data));
-  }, [currentChat, message, currentUser, messageDeleted, dispatch, doScroll]);
+  }, [currentChat, message, currentUser, dispatch, doScroll, messageDeleted]);
 
   useEffect(() => {
     if (currentChat._id !== dataMessage.from) {
@@ -129,7 +129,7 @@ function ChatView() {
 
   useEffect(() => {
     arrivalMsg && setMessage((prev) => [...prev, arrivalMsg]);
-  }, [arrivalMsg]);
+  }, [arrivalMsg, messageDeleted]);
 
   const handleChangeTab = (event, newValue) => {
     const currentChat = allUsers[newValue];
@@ -157,12 +157,14 @@ function ChatView() {
   };
 
   const onDeleteHandler = (messageId) => {
-    dispatch(deleteMessage(messageId));
     setMessageDeleted(!messageDeleted);
-    socket.emit("edit-msg", {
-      to: currentChat._id,
+    dispatch(deleteMessage(messageId));
+    const data = {
       from: currentUser._id,
-    });
+      to: currentChat._id,
+    };
+    socket.emit("edit-msg", data);
+    
     setDoScroll(true);
   };
 
