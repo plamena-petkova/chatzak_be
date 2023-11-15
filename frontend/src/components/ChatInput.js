@@ -1,27 +1,39 @@
-import { Box, Button, Input } from "@mui/joy";
+import { Box, Button, Input, Tooltip } from "@mui/joy";
 import SendIcon from "@mui/icons-material/Send";
 import { useEffect, useState } from "react";
 import Picker from "emoji-picker-react";
-import InsertEmoticonSharpIcon from '@mui/icons-material/InsertEmoticonSharp';
-import '../App.css';
+import InsertEmoticonSharpIcon from "@mui/icons-material/InsertEmoticonSharp";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import "../App.css";
+import { styled } from "@mui/material/styles";
 
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+  minWidth: 265,
+});
 
 function ChatInput({ handleSendMsg }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  
-  
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleEmojiPickerHideShow = () => {
     setShowEmojiPicker(!showEmojiPicker);
   };
-
 
   const handleEmojiClick = (event, emojiObject) => {
     let message = msg;
     message += event.emoji;
     setMsg(message);
-  }
-
+  };
 
   const handleMessage = (event) => {
     setMsg(event.target.value);
@@ -35,7 +47,7 @@ function ChatInput({ handleSendMsg }) {
 
   useEffect(() => {
     const keyDownHandler = (event) => {
-      if (event.key === 'Enter') {
+      if (event.key === "Enter") {
         event.preventDefault();
 
         if (msg) {
@@ -45,21 +57,61 @@ function ChatInput({ handleSendMsg }) {
       }
     };
 
-    document.addEventListener('keydown', keyDownHandler);
+    document.addEventListener("keydown", keyDownHandler);
 
     return () => {
-      document.removeEventListener('keydown', keyDownHandler);
+      document.removeEventListener("keydown", keyDownHandler);
     };
   }, [handleSendMsg, msg]);
 
+  const handleFileChange = (e) => {
+    console.log("Event", e);
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const sendPhoto = async () => {
+    try {
+      const bodyFormData = new FormData();
+      bodyFormData.append("photo", selectedFile);
+
+      console.log("Send photo");
+      console.log("Selected", selectedFile);
+      console.log("FormData", bodyFormData);
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (selectedFile) {
+      sendPhoto();
+    } else {
+      alert("Please select a file.");
+    }
+  };
+
   return (
     <Box>
-      
       <Input
         onChange={handleMessage}
         value={msg}
         placeholder="Type your message..."
-        startDecorator={<Button onClick={handleEmojiPickerHideShow} variant="soft"><InsertEmoticonSharpIcon /></Button>}
+        startDecorator={
+          <>
+            <Tooltip title="Pick emoji" variant="soft">
+              <Button onClick={handleEmojiPickerHideShow} variant="soft">
+                <InsertEmoticonSharpIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Add picture" variant="soft">
+              <Button sx={{ ml: "2px" }} variant="soft" component="label">
+                <AddCircleIcon />
+                <VisuallyHiddenInput onChange={handleFileChange} type="file" />
+              </Button>
+            </Tooltip>
+          </>
+        }
         endDecorator={
           <Button
             onClick={sendChat}
