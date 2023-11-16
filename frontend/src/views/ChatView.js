@@ -257,6 +257,7 @@ function ChatView() {
                               color: "lightgrey",
                               fontWeight: "lg",
                               fontSize: "sm",
+                              wordBreak:"break-word"
                             }}
                           >
                             {msg.message}
@@ -269,6 +270,7 @@ function ChatView() {
                               color: "green",
                               fontWeight: "lg",
                               fontSize: "sm",
+                              wordBreak:"break-word"
                             }}
                           >
                             {msg.message}
@@ -321,6 +323,7 @@ function ChatView() {
                             color: "lightgrey",
                             fontWeight: "lg",
                             fontSize: "sm",
+                            wordWrap: "break-word"
                           }}
                         >
                           {msg.message}
@@ -333,6 +336,7 @@ function ChatView() {
                             color: "blue",
                             fontWeight: "lg",
                             fontSize: "sm",
+                            wordWrap: "break-word"
                           }}
                         >
                           {msg.message}
@@ -346,7 +350,7 @@ function ChatView() {
         </TabPanel>
       </Tabs>
       <Box sx={{ mt: 2 }}>
-        <ChatInput handleSendMsg={handleSendMsg} />
+        <ChatInput socket={socket} handleSendMsg={handleSendMsg} />
       </Box>
     </Box>
   );

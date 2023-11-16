@@ -20,10 +20,11 @@ const VisuallyHiddenInput = styled("input")({
   minWidth: 265,
 });
 
-function ChatInput({ handleSendMsg }) {
+function ChatInput({ handleSendMsg, socket }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [image, setImage] = useState("");
 
   const handleEmojiPickerHideShow = () => {
     setShowEmojiPicker(!showEmojiPicker);
@@ -65,31 +66,22 @@ function ChatInput({ handleSendMsg }) {
   }, [handleSendMsg, msg]);
 
   const handleFileChange = (e) => {
-    console.log("Event", e);
     setSelectedFile(e.target.files[0]);
   };
 
-  const sendPhoto = async () => {
-    try {
-      const bodyFormData = new FormData();
-      bodyFormData.append("photo", selectedFile);
-
-      console.log("Send photo");
-      console.log("Selected", selectedFile);
-      console.log("FormData", bodyFormData);
-    } catch (error) {
-      console.error("Upload error:", error);
+  const handleFileUpload = () => {
+    if(selectedFile) {
+      socket.emit('fileUpload', selectedFile);
+      setMsg(image);
     }
-  };
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (selectedFile) {
-      sendPhoto();
-    } else {
-      alert("Please select a file.");
-    }
-  };
+  useEffect(() => {
+   
+      socket.on("fileUploadResponse", (image) => {
+      setImage(`data:image/jpg;base64,${image}`);
+    })
+}, [socket,image])
 
   return (
     <Box>
@@ -105,7 +97,7 @@ function ChatInput({ handleSendMsg }) {
               </Button>
             </Tooltip>
             <Tooltip title="Add picture" variant="soft">
-              <Button sx={{ ml: "2px" }} variant="soft" component="label">
+              <Button onClick={handleFileUpload} sx={{ ml: "2px" }} variant="soft" component="label">
                 <AddCircleIcon />
                 <VisuallyHiddenInput onChange={handleFileChange} type="file" />
               </Button>
@@ -127,3 +119,4 @@ function ChatInput({ handleSendMsg }) {
 }
 
 export default ChatInput;
+//{image && <img style={{ width: '100px', height: '100px' }} src={image} alt="sendedFile" />}
