@@ -207,7 +207,6 @@ function ChatComponent() {
         <TabList
           sticky={sticky}
           underlinePlacement={{ top: "bottom", bottom: "top" }[sticky]}
-          value={value}
         >
           {allUsers.map((contact) => {
             return <ContactCard key={contact._id} contact={contact} />;
@@ -253,7 +252,7 @@ function ChatComponent() {
                               wordBreak: "break-word",
                             }}
                           >
-                            {msg.message}
+                            {msg.message.includes('data:image') ? <img height={'150px'} width={'auto'} alt="imageSend" src={msg.message}/> : msg.message}
                           </Typography>
                         ) : (
                           <Typography
@@ -266,7 +265,7 @@ function ChatComponent() {
                               wordBreak: "break-word",
                             }}
                           >
-                            {msg.message}
+                           {msg.message.includes('data:image') ?<img height={'150px'} width={'auto'} alt="imageSend" src={msg.message}/> : msg.message}
                           </Typography>
                         )}
                       </Paper>
@@ -319,7 +318,7 @@ function ChatComponent() {
                             wordWrap: "break-word",
                           }}
                         >
-                          {msg.message}
+                        {msg.message.includes('data:image') ?<img height={'150px'} width={'auto'} alt="imageSend" src={msg.message}/> : msg.message}
                         </Typography>
                       ) : (
                         <Typography
@@ -332,7 +331,7 @@ function ChatComponent() {
                             wordWrap: "break-word",
                           }}
                         >
-                          {msg.message}
+                         {msg.message.includes('data:image') ?<img height={'150px'} width={'auto'} alt="imageSend" src={msg.message}/> : msg.message}
                         </Typography>
                       )}
                     </Paper>

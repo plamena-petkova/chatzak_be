@@ -88,10 +88,4 @@ io.on("connection", (socket) => {
       socket.to(sendUserSocket).emit("msg-edited", data.message);
     }
   });
-  socket.on('fileUpload', (data) => {
-    if(data !== null) {
-      io.emit('fileUploadResponse', data.toString("base64"));
-    }
-    
-})
 });
