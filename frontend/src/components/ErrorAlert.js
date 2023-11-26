@@ -2,7 +2,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CloseIcon from "@mui/icons-material/Close";
 import { Alert, Box, IconButton } from "@mui/joy";
 
-function ErrorAlert({ onCloseHandler }) {
+function ErrorAlert({ onCloseHandler, message }) {
   return (
     <Box sx={{ display: "flex", justifyContent: "end", mb: 2 }}>
       <Alert
@@ -22,7 +22,7 @@ function ErrorAlert({ onCloseHandler }) {
           </>
         }
       >
-        Incorrect username or password
+        {message}
       </Alert>
     </Box>
   );

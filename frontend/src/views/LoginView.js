@@ -61,7 +61,7 @@ function LoginView() {
 
   return (
     <>
-      {open ? <ErrorAlert onCloseHandler={onCloseHandler} /> : null}
+      {open ? <ErrorAlert message='Incorrect username or password' onCloseHandler={onCloseHandler} /> : null}
       <Box
         sx={{
           display: "flex",

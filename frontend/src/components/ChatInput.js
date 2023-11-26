@@ -1,4 +1,4 @@
-import { Box, Button, DialogTitle, Input, Modal, ModalDialog, Tooltip } from "@mui/joy";
+import { Box, Button, DialogTitle, Input, Modal, ModalDialog, Tooltip, Typography } from "@mui/joy";
 import SendIcon from "@mui/icons-material/Send";
 import { useEffect, useState } from "react";
 import Picker from "emoji-picker-react";
@@ -6,6 +6,7 @@ import InsertEmoticonSharpIcon from "@mui/icons-material/InsertEmoticonSharp";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import "../App.css";
 import { styled } from "@mui/material/styles";
+import ErrorAlert from "./ErrorAlert";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -24,6 +25,7 @@ function ChatInput({ handleSendMsg, socket }) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleEmojiPickerHideShow = () => {
     setShowEmojiPicker(!showEmojiPicker);
@@ -66,7 +68,10 @@ function ChatInput({ handleSendMsg, socket }) {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
+    if(e.target.files[0].size > 99000) {
+      setError(true);
+      return;
+    }
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -78,9 +83,21 @@ function ChatInput({ handleSendMsg, socket }) {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    if(error) {
+      setIsOpen(false);
+    }
+  }, [error]);
+
+  const onCloseHandler = () => {
+    setError(false);
+  } 
+
+
 
   return (
     <Box>
+      {error && <ErrorAlert message='The picture is too large' onCloseHandler={onCloseHandler} />}
       <Input
         onChange={handleMessage}
         value={msg}
@@ -101,6 +118,7 @@ function ChatInput({ handleSendMsg, socket }) {
                       <DialogTitle sx={{ justifyContent: "center" }}>
                         Upload File
                       </DialogTitle>
+                      <Typography>JPG, Max Size: 100kb</Typography>
                       <Button
                         sx={{ ml: "2px" }}
                         variant="soft"
@@ -134,4 +152,3 @@ function ChatInput({ handleSendMsg, socket }) {
 }
 
 export default ChatInput;
-//{image && <img style={{ width: '100px', height: '100px' }} src={image} alt="sendedFile" />}
