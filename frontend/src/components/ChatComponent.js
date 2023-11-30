@@ -38,7 +38,7 @@ function ChatComponent() {
   const [value, setValue] = useState(0);
   const scrollableContainerRef = useRef(null);
   const [showRemoveIcon, setShowRemoveIcon] = useState({ id: "", show: false });
-  const [messageDeleted, setMessageDeleted] = useState(false);
+  const [messageDeleted, setMessageDeleted] = useState({id:'', deleted: true});
   const [dataMessage, setDataMessage] = useState({});
   const [doScroll, setDoScroll] = useState(true);
 
@@ -56,7 +56,11 @@ function ChatComponent() {
   }, []);
 
   useEffect(() => {
-    if (currentChat._id === allUsers[value]._id) {
+    console.log('MessageDeleted', messageDeleted)
+    if (currentChat?._id === allUsers[value]?._id) {
+      dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
+    }
+    if(messageDeleted.deleted === true) {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
     }
   }, [
@@ -132,7 +136,7 @@ function ChatComponent() {
 
   useEffect(() => {
     arrivalMsg && setMessage((prev) => [...prev, arrivalMsg]);
-  }, [arrivalMsg, messageDeleted]);
+  }, [arrivalMsg]);
 
   const handleChangeTab = (event, newValue) => {
     const currentChat = allUsers[newValue];
@@ -160,11 +164,15 @@ function ChatComponent() {
   };
 
   const onDeleteHandler = (messageId) => {
-    setMessageDeleted(!messageDeleted);
+    console.log('Clicked')
+    //setMessageDeleted(!messageDeleted);
+    setMessageDeleted({id:messageId, deleted: true})
+    
     dispatch(deleteMessage(messageId));
     const data = {
       from: currentUser._id,
       to: currentChat._id,
+      message:'Removed message'
     };
     socket.emit("edit-msg", data);
 
