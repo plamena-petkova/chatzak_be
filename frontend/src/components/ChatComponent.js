@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, TabList, TabPanel, Tabs, Button, Typography } from "@mui/joy";
+import { Box, TabList, TabPanel, Tabs } from "@mui/joy";
 import { useEffect, useRef, useState } from "react";
 import { sendMessageRoute } from "../utils/apiRoutes";
 import axios from "axios";
@@ -18,10 +18,9 @@ import {
 } from "../store/chatReducer";
 import ChatInput from "../components/ChatInput";
 import ContactCard from "../components/ContactCard";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { v4 as uuidv4 } from "uuid";
 import { socket } from "../socket";
-import { Paper } from "@mui/material";
+import MessageComponent from "./MessageComponent";
 
 function ChatComponent() {
   const dispatch = useDispatch();
@@ -38,7 +37,10 @@ function ChatComponent() {
   const [value, setValue] = useState(0);
   const scrollableContainerRef = useRef(null);
   const [showRemoveIcon, setShowRemoveIcon] = useState({ id: "", show: false });
-  const [messageDeleted, setMessageDeleted] = useState({id:'', deleted: true});
+  const [messageDeleted, setMessageDeleted] = useState({
+    id: "",
+    deleted: true,
+  });
   const [dataMessage, setDataMessage] = useState({});
   const [doScroll, setDoScroll] = useState(true);
 
@@ -56,11 +58,13 @@ function ChatComponent() {
   }, []);
 
   useEffect(() => {
-    console.log('MessageDeleted', messageDeleted)
     if (currentChat?._id === allUsers[value]?._id) {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
     }
-    if(messageDeleted.deleted === true) {
+    if (
+      messageDeleted.deleted === true &&
+      currentChat?._id === allUsers[value]?._id
+    ) {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
     }
   }, [
@@ -164,15 +168,12 @@ function ChatComponent() {
   };
 
   const onDeleteHandler = (messageId) => {
-    console.log('Clicked')
-    //setMessageDeleted(!messageDeleted);
-    setMessageDeleted({id:messageId, deleted: true})
-    
+    setMessageDeleted({ id: messageId, deleted: true });
     dispatch(deleteMessage(messageId));
     const data = {
       from: currentUser._id,
       to: currentChat._id,
-      message:'Removed message'
+      message: "Removed message",
     };
     socket.emit("edit-msg", data);
 
@@ -214,8 +215,8 @@ function ChatComponent() {
         ref={scrollableContainerRef}
       >
         <TabList
-          sticky='top'
-          underlinePlacement={{ top: "bottom", bottom: "top" }['top']}
+          sticky="top"
+          underlinePlacement={{ top: "bottom", bottom: "top" }["top"]}
         >
           {allUsers.map((contact) => {
             return <ContactCard key={contact._id} contact={contact} />;
@@ -226,161 +227,25 @@ function ChatComponent() {
             messages.map((msg) => {
               if (msg.fromSelf) {
                 return (
-                  <Box
+                  <MessageComponent
                     key={uuidv4()}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyItems: "center",
-                      mt: 2,
-                      mb: 2,
-                      alignItems: "end",
-                    }}
-                  >
-                    <Box sx={{ display: "flex", flexDirection: "row" }}>
-                      <Paper
-                        onClick={() => handleShowRemoveIcon(msg.id)}
-                        variant="outlined"
-                        sx={{
-                          whiteSpace: "normal",
-                          maxWidth: 700,
-                          borderRadius: "18px",
-                          p: 0.5,
-                          cursor: "pointer",
-                        }}
-                        disabled={msg.isRemoved}
-                      >
-                        {msg.isRemoved ? (
-                          <Typography
-                            sx={{
-                              mr: 1,
-                              ml: 1,
-                              color: "lightgrey",
-                              fontWeight: "lg",
-                              fontSize: "sm",
-                              wordBreak: "break-word",
-                            }}
-                          >
-                            {msg.message.includes("data:image") ? (
-                              <img
-                                height={"150px"}
-                                width={"auto"}
-                                alt="imageSend"
-                                src={msg.message}
-                              />
-                            ) : (
-                              msg.message
-                            )}
-                          </Typography>
-                        ) : (
-                          <Typography
-                            sx={{
-                              mr: 1,
-                              ml: 1,
-                              color: "green",
-                              fontWeight: "lg",
-                              fontSize: "sm",
-                              wordBreak: "break-word",
-                            }}
-                          >
-                            {msg.message.includes("data:image") ? (
-                              <img
-                                height={"150px"}
-                                width={"auto"}
-                                alt="imageSend"
-                                src={msg.message}
-                              />
-                            ) : (
-                              msg.message
-                            )}
-                          </Typography>
-                        )}
-                      </Paper>
-                      {msg.id === showRemoveIcon.id &&
-                      !msg.isRemoved &&
-                      showRemoveIcon.show ? (
-                        <Button
-                          sx={{ zIndex: 100 }}
-                          size="sm"
-                          variant="plain"
-                          onClick={() => onDeleteHandler(msg.id)}
-                        >
-                          <DeleteIcon fontSize="sm" />
-                        </Button>
-                      ) : null}
-                    </Box>
-                  </Box>
+                    handleShowRemoveIcon={handleShowRemoveIcon}
+                    showRemoveIcon={showRemoveIcon}
+                    msg={msg}
+                    onDeleteHandler={onDeleteHandler}
+                    alignItems={"end"}
+                  />
                 );
               } else {
                 return (
-                  <Box
+                  <MessageComponent
                     key={uuidv4()}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      mt: 2,
-                      mb: 2,
-                      alignItems: "start",
-                    }}
-                  >
-                    <Paper
-                      onClick={() => handleShowRemoveIcon(msg.id)}
-                      variant="outlined"
-                      sx={{
-                        whiteSpace: "normal",
-                        maxWidth: 700,
-                        borderRadius: "18px",
-                        p: 0.5,
-                      }}
-                      disabled={msg.isRemoved}
-                    >
-                      {msg.isRemoved ? (
-                        <Typography
-                          sx={{
-                            mr: 1,
-                            ml: 1,
-                            color: "lightgrey",
-                            fontWeight: "lg",
-                            fontSize: "sm",
-                            wordWrap: "break-word",
-                          }}
-                        >
-                          {msg.message.includes("data:image") ? (
-                            <img
-                              height={"150px"}
-                              width={"auto"}
-                              alt="imageSend"
-                              src={msg.message}
-                            />
-                          ) : (
-                            msg.message
-                          )}
-                        </Typography>
-                      ) : (
-                        <Typography
-                          sx={{
-                            mr: 1,
-                            ml: 1,
-                            color: "blue",
-                            fontWeight: "lg",
-                            fontSize: "sm",
-                            wordWrap: "break-word",
-                          }}
-                        >
-                          {msg.message.includes("data:image") ? (
-                            <img
-                              height={"150px"}
-                              width={"auto"}
-                              alt="imageSend"
-                              src={msg.message}
-                            />
-                          ) : (
-                            msg.message
-                          )}
-                        </Typography>
-                      )}
-                    </Paper>
-                  </Box>
+                    handleShowRemoveIcon={handleShowRemoveIcon}
+                    showRemoveIcon={showRemoveIcon}
+                    msg={msg}
+                    onDeleteHandler={onDeleteHandler}
+                    alignItems={"start"}
+                  />
                 );
               }
             })}
