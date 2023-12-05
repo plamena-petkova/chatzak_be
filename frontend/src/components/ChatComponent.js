@@ -12,6 +12,7 @@ import {
 } from "../store/authReducer";
 import {
   deleteMessage,
+  editMessage,
   getAllMessages,
   setCurrentChat,
   setNewMessageIndicator,
@@ -41,6 +42,10 @@ function ChatComponent() {
     id: "",
     deleted: true,
   });
+  const [messageEdited, setMessageEdited] = useState({
+    id: "",
+    edited: true,
+  });
   const [dataMessage, setDataMessage] = useState({});
   const [doScroll, setDoScroll] = useState(true);
 
@@ -62,7 +67,7 @@ function ChatComponent() {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
     }
     if (
-      messageDeleted.deleted === true &&
+      (messageDeleted.deleted === true || messageEdited.edited === true) &&
       currentChat?._id === allUsers[value]?._id
     ) {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
@@ -180,6 +185,27 @@ function ChatComponent() {
     setDoScroll(true);
   };
 
+  const onEditHandler = (messageId, newMessage) => {
+    console.log('Message', newMessage);
+    setMessageEdited({ id: messageId, edited: true });
+    dispatch(editMessage({messageId, newMessage}));
+    const data = {
+      from: currentUser._id,
+      to: currentChat._id,
+      message: newMessage,
+    };
+    socket.emit("edit-msg", data.message);
+
+    setShowRemoveIcon({ id: messageId, show: true });
+    if (messageId === showRemoveIcon.id) {
+      const showIcon = { ...showRemoveIcon };
+      showIcon.show = !showIcon.show;
+      setShowRemoveIcon(showIcon);
+    }
+
+    setDoScroll(true);
+  };
+
   const handleShowRemoveIcon = (messageId) => {
     setDoScroll(false);
     setShowRemoveIcon({ id: messageId, show: true });
@@ -233,6 +259,7 @@ function ChatComponent() {
                     showRemoveIcon={showRemoveIcon}
                     msg={msg}
                     onDeleteHandler={onDeleteHandler}
+                    onEditHandler={onEditHandler}
                     alignItems={"end"}
                   />
                 );

@@ -27,6 +27,15 @@ export const deleteMessage = createAsyncThunk(
   }
 );
 
+export const editMessage =  createAsyncThunk(
+  "chat/edit-message",
+  async ({messageId, newMessage}) => {
+    console.log('NewMessage', newMessage);
+    const response = await axios.put(`${deleteMessageRoute}${messageId}`, {newMessage});
+    return response.data;
+  }
+);
+
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -69,6 +78,18 @@ export const chatSlice = createSlice({
      
     });
     builder.addCase(deleteMessage.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error;
+    });
+    builder.addCase(editMessage.pending, (state, action) => {
+      state.isLoading = true;
+    });
+    builder.addCase(editMessage.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.messages = action.payload.message;
+     
+    });
+    builder.addCase(editMessage.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error;
     });

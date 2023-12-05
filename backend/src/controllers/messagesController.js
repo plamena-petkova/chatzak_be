@@ -35,6 +35,23 @@ module.exports.deleteMessage = async (req, res, next) => {
   }
 };
 
+module.exports.editMessage = async (req, res, next) => {
+  try {
+    const messageId = req.params.messageId;
+    const msg = req.body.newMessage;
+
+    const message = await Message.findById(messageId);
+
+    message.message.text = msg;
+    message.save();
+
+    return res.json({ msg: "Message successfully edited", message });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
 module.exports.getAllMessages = async (req, res, next) => {
   try {
     const { from, to } = req.body;
