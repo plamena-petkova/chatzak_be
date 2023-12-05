@@ -80,6 +80,7 @@ function ChatComponent() {
     doScroll,
     messageDeleted,
     value,
+    messageEdited
   ]);
 
   useEffect(() => {
