@@ -67,7 +67,13 @@ function ChatComponent() {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
     }
     if (
-      (messageDeleted.deleted === true || messageEdited.edited === true) &&
+      (messageDeleted.deleted === true) &&
+      currentChat?._id === allUsers[value]?._id
+    ) {
+      dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
+    }
+    if (
+      (messageEdited.edited === true) &&
       currentChat?._id === allUsers[value]?._id
     ) {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
