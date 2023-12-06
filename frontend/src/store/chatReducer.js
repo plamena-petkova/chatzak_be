@@ -30,7 +30,6 @@ export const deleteMessage = createAsyncThunk(
 export const editMessage =  createAsyncThunk(
   "chat/edit-message",
   async ({messageId, newMessage}) => {
-    console.log('NewMessage', newMessage);
     const response = await axios.put(`${deleteMessageRoute}${messageId}`, {newMessage});
     return response.data;
   }

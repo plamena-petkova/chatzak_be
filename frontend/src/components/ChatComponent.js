@@ -193,7 +193,6 @@ function ChatComponent() {
   };
 
   const onEditHandler = (messageId, newMessage) => {
-    console.log('Message', newMessage);
     setMessageEdited({ id: messageId, edited: true });
     dispatch(editMessage({messageId, newMessage}));
     const data = {
@@ -201,7 +200,7 @@ function ChatComponent() {
       to: currentChat._id,
       message: newMessage,
     };
-    socket.emit("edit-msg", data.message);
+    socket.emit("edit-msg", data);
 
     setShowRemoveIcon({ id: messageId, show: true });
     if (messageId === showRemoveIcon.id) {
