@@ -67,7 +67,7 @@ function LoginView() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          mt: 10,
+          minHeight:"100vh",
         }}
       >
         <Card sx={{ minWidth: 400, minHeight: 200 }}>

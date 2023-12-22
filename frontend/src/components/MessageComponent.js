@@ -1,5 +1,5 @@
 import { Box, Button, Typography, Input } from "@mui/joy";
-import { Paper } from "@mui/material";
+import { FormControl, Paper } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -34,8 +34,9 @@ function MessageComponent({
   };
 
   const editMessageInput = (
-    <Box key={uuidv4()} component="form">
+    <FormControl>
       <Input
+        key={uuidv4()}
         sx={{ "--Input-focused": 1, width: 256 }}
         defaultValue={newMessage}
         onBlur={(event) => editHandler(msg.id, event)}
@@ -45,7 +46,7 @@ function MessageComponent({
           </Button>
         }
       />
-    </Box>
+    </FormControl>
   );
 
   return (

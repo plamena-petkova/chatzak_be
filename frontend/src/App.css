@@ -5,3 +5,9 @@ aside {
     z-index: 100;
     max-width: 270px;
 }
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}

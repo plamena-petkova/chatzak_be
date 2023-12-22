@@ -18,6 +18,7 @@ function HomeView() {
           backgroundColor: "#C2ECFA",
           minHeight: "80vh",
           minWidth: "70vw",
+          
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2, pb:2 }}>
