@@ -248,6 +248,11 @@ function ChatComponent() {
       >
         <TabList
           sticky="top"
+          sx={{
+            overflow: 'auto',
+            scrollSnapType: 'x mandatory',
+            '&::-webkit-scrollbar': { display: 'none' },
+          }}
           underlinePlacement={{ top: "bottom", bottom: "top" }["top"]}
         >
           {allUsers.map((contact) => {
