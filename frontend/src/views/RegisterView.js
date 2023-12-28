@@ -1,4 +1,12 @@
-import { Box, Button, Card, CardCover, Input, Link, Typography } from "@mui/joy";
+import {
+  Box,
+  Button,
+  Card,
+  CardCover,
+  Input,
+  Link,
+  Typography,
+} from "@mui/joy";
 import { useState } from "react";
 import logo from "../assets/chatzakLogo.png";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +21,7 @@ function RegisterView() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
   const [registerValues, setRegisterValues] = useState({
     email: "",
     names: "",
@@ -21,7 +29,11 @@ function RegisterView() {
     password: "",
   });
 
-  const disableButton = (registerValues.email === "" && registerValues.password === "" && registerValues.names === "" && registerValues.username === "");  
+  const disableButton =
+    registerValues.email === "" &&
+    registerValues.password === "" &&
+    registerValues.names === "" &&
+    registerValues.username === "";
 
   const handleChange = (event) => {
     setRegisterValues({
@@ -40,13 +52,12 @@ function RegisterView() {
         navigate("/chat");
       })
       .catch((error) => {
-        console.error("Error", error);
-        if(error.message === 'Request failed with status code 409') {
-          setErrorMsg('Username or email is already used!');
+        if (error.message === "Request failed with status code 409") {
+          setErrorMsg("Username or email is already used!");
         } else {
           setErrorMsg(error.message);
         }
-       
+
         setOpen(true);
         return;
       });
@@ -54,12 +65,14 @@ function RegisterView() {
 
   const onCloseHandler = () => {
     setOpen(false);
-    setRegisterValues({});
+    setRegisterValues({ email: "", names: "", username: "", password: "" });
   };
 
   return (
     <>
-      {open ? <ErrorAlert message={errorMsg} onCloseHandler={onCloseHandler} /> : null}
+      {open ? (
+        <ErrorAlert message={errorMsg} onCloseHandler={onCloseHandler} />
+      ) : null}
       <Box
         sx={{
           display: "flex",
@@ -86,43 +99,51 @@ function RegisterView() {
               <Typography sx={{ fontSize: 25 }}>Register</Typography>
             </Box>
             <Box component="form" onSubmit={submitRegisterHandler}>
-            <Input
-              placeholder="Email"
-              name="email"
-              type="email"
-              required
-              sx={{ m: 1 }}
-              onChange={handleChange}
-            />
-            <Input
-              placeholder="Names"
-              name="names"
-              type="text"
-              sx={{ m: 1 }}
-              onChange={handleChange}
-            />
-            <Input
-              placeholder="Username"
-              name="username"
-              type="text"
-              required
-              sx={{ m: 1 }}
-              onChange={handleChange}
-            />
-            <Input
-              placeholder="Password"
-              name="password"
-              type="password"
-              required
-              sx={{ m: 1 }}
-              onChange={handleChange}
-            />
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Button type="submit" disabled={disableButton} >Register</Button>
-            </Box>
+              <Input
+                placeholder="Email"
+                name="email"
+                type="email"
+                required
+                sx={{ m: 1 }}
+                onChange={handleChange}
+              />
+              <Input
+                placeholder="Names"
+                name="names"
+                type="text"
+                sx={{ m: 1 }}
+                onChange={handleChange}
+              />
+              <Input
+                placeholder="Username"
+                name="username"
+                type="text"
+                required
+                sx={{ m: 1 }}
+                onChange={handleChange}
+              />
+              <Input
+                placeholder="Password"
+                name="password"
+                type="password"
+                required
+                sx={{ m: 1 }}
+                onChange={handleChange}
+              />
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Button type="submit" disabled={disableButton}>
+                  Register
+                </Button>
+              </Box>
             </Box>
           </Box>
-          <Link sx={{justifyContent:'center', ml:4, mr:4, fontSize:'sm'}} variant="soft" href="/login" >Return to login</Link>
+          <Link
+            sx={{ justifyContent: "center", ml: 4, mr: 4, fontSize: "sm" }}
+            variant="soft"
+            href="/login"
+          >
+            Return to login
+          </Link>
         </Card>
       </Box>
     </>

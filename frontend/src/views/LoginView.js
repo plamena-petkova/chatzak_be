@@ -17,6 +17,7 @@ function LoginView() {
   const [password, setPassword] = useState("");
   const [credentials, setCredentials] = useState(false);
   const [open, setOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
 
   const onCloseHandler = () => {
@@ -52,7 +53,12 @@ function LoginView() {
           navigate("/chat");
         })
         .catch((error) => {
-          console.error("Error", error);
+          console.error("Error", error.message);
+          if(error.message === 'Request failed with status code 404') {
+            setErrorMsg('Incorrect username or password');
+          } else {
+            setErrorMsg(error.message);
+          }
           setOpen(true);
           return;
         });
@@ -61,7 +67,7 @@ function LoginView() {
 
   return (
     <>
-      {open ? <ErrorAlert message='Incorrect username or password' onCloseHandler={onCloseHandler} /> : null}
+      {open ? <ErrorAlert message={errorMsg} onCloseHandler={onCloseHandler} /> : null}
       <Box
         sx={{
           display: "flex",
