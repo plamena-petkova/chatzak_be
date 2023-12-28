@@ -13,6 +13,7 @@ function RegisterView() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [registerValues, setRegisterValues] = useState({
     email: "",
     names: "",
@@ -40,6 +41,12 @@ function RegisterView() {
       })
       .catch((error) => {
         console.error("Error", error);
+        if(error.message === 'Request failed with status code 409') {
+          setErrorMsg('Username or email is already used!');
+        } else {
+          setErrorMsg(error.message);
+        }
+       
         setOpen(true);
         return;
       });
@@ -52,7 +59,7 @@ function RegisterView() {
 
   return (
     <>
-      {open ? <ErrorAlert onCloseHandler={onCloseHandler} /> : null}
+      {open ? <ErrorAlert message={errorMsg} onCloseHandler={onCloseHandler} /> : null}
       <Box
         sx={{
           display: "flex",

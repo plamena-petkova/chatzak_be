@@ -9,13 +9,15 @@ module.exports.register = async (req, res, next) => {
     const usernameCheck = await User.findOne({ username });
 
     if (usernameCheck) {
-      return res.json({ msg: "Username already used", status: false });
+      return res
+        .status(409)
+        .json({ msg: "Username already used", status: false });
     }
 
     const emailCheck = await User.findOne({ email });
 
     if (emailCheck) {
-      return res.json({ msg: "Email already used", status: false });
+      return res.status(409).json({ msg: "Email already used", status: false });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,16 +43,16 @@ module.exports.login = async (req, res, next) => {
 
     if (!user) {
       return res
-      .status(404)
-      .json({ msg: "Incorrect username or password", status: false });
+        .status(404)
+        .json({ msg: "Incorrect username or password", status: false });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res
-      .status(404)
-      .json({ msg: "Incorrect username or password", status: false });
+        .status(404)
+        .json({ msg: "Incorrect username or password", status: false });
     }
 
     delete user.password;
@@ -71,7 +73,7 @@ module.exports.getAllUsers = async (req, res, next) => {
       "names",
     ]);
     res.json({ status: true, users });
-    
+
     if (!users) {
       return res
         .status(404)
@@ -82,30 +84,29 @@ module.exports.getAllUsers = async (req, res, next) => {
   }
 };
 
-
 module.exports.updateAvatar = async (req, res, next) => {
-    try {
-        const { userId, avatar } = req.body;
+  try {
+    const { userId, avatar } = req.body;
 
-        if (mongoose.Types.ObjectId.isValid(userId)) {
-        const user = await User.findById(userId);
+    if (mongoose.Types.ObjectId.isValid(userId)) {
+      const user = await User.findById(userId);
 
-        if(!user) {
-            return res.status(404).json({ message: 'User not found', status: false });
-        }
-
-        user.avatarImg = avatar;
-
-        await user.save();
-
-        return res.json({message:'User info updated', status: true, user});
-
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: "User not found", status: false });
       }
-    } catch (err) {
-        next(err);
-    }
-}
 
+      user.avatarImg = avatar;
+
+      await user.save();
+
+      return res.json({ message: "User info updated", status: true, user });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports.getUserById = async (req, res, next) => {
   try {
