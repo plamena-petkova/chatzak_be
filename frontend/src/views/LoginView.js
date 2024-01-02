@@ -67,7 +67,7 @@ function LoginView() {
 
   return (
     <>
-      {open ? <ErrorAlert message={errorMsg} onCloseHandler={onCloseHandler} /> : null}
+      {open && <ErrorAlert message={errorMsg} onCloseHandler={onCloseHandler} />}
       <Box
         sx={{
           display: "flex",

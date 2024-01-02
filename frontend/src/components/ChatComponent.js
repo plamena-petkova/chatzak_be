@@ -237,7 +237,13 @@ function ChatComponent() {
           overflowY: "scroll",
           height: "60vh",
           maxHeight: "60vh",
-          "&::-webkit-scrollbar": { display: "none" },
+          "&::-webkit-scrollbar": { width:'4px' },
+          "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+            borderRadius: 6,
+            backgroundColor: '#DDE7EE',
+            minHeight: 24,
+            border: "none",
+          },
         }}
         onChange={handleChangeTab}
         aria-label="Vertical tabs"
@@ -251,7 +257,14 @@ function ChatComponent() {
           sx={{
             overflow: 'auto',
             scrollSnapType: 'x mandatory',
-            '&::-webkit-scrollbar': { display: 'none' },
+            "&::-webkit-scrollbar": { maxWidth:'4px', maxHeight:'1px' },
+            "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+            borderRadius: 6,
+            backgroundColor: "#DDE7EE",
+            minHeight: 3,
+            minWidth:3,
+            border: "none",
+          },
           }}
           underlinePlacement={{ top: "bottom", bottom: "top" }["top"]}
         >

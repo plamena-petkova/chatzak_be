@@ -13,6 +13,7 @@ function ChatView() {
         justifyContent: "space-between",
         mr: 4,
         ml: 4,
+        maxHeight:'97vh'
       }}
     >
       <Header />
