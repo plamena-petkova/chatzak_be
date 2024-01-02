@@ -230,7 +230,7 @@ function ChatComponent() {
   }, [handleSendMsg, doScroll]);
 
   return (
-    <>
+    <Box sx={{position:'relative'}}>
       <Tabs
         sx={{
           overflow: "auto",
@@ -302,10 +302,10 @@ function ChatComponent() {
             })}
         </TabPanel>
       </Tabs>
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2}}>
         <ChatInput socket={socket} handleSendMsg={handleSendMsg} />
       </Box>
-    </>
+    </Box>
   );
 }
 
