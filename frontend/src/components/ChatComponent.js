@@ -302,7 +302,7 @@ function ChatComponent() {
             })}
         </TabPanel>
       </Tabs>
-      <Box sx={{ mt: 2}}>
+      <Box sx={{ mt: 1}}>
         <ChatInput socket={socket} handleSendMsg={handleSendMsg} />
       </Box>
     </Box>
