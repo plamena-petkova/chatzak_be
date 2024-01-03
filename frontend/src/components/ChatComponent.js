@@ -230,7 +230,7 @@ function ChatComponent() {
   }, [handleSendMsg, doScroll]);
 
   return (
-    <Box sx={{position:'relative'}}>
+    <Box>
       <Tabs
         sx={{
           overflow: "auto",

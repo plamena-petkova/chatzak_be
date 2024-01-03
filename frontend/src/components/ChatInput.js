@@ -96,8 +96,8 @@ function ChatInput({ handleSendMsg, socket }) {
 
 
   return (
-    <Box>
-      {showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />}
+    <Box sx={{position:'relative'}}>
+      {showEmojiPicker && <Box sx={{position:'absolute'}}><Picker onEmojiClick={handleEmojiClick} /></Box>}
       {error && <ErrorAlert message='The picture is too large' onCloseHandler={onCloseHandler} />}
       <Input
         onChange={handleMessage}
