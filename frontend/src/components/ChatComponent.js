@@ -49,6 +49,7 @@ function ChatComponent() {
   const [dataMessage, setDataMessage] = useState({});
   const [doScroll, setDoScroll] = useState(true);
 
+
   useEffect(() => {
     if (currentUser._id && !socket.connected) {
       socket.connect();
@@ -67,13 +68,13 @@ function ChatComponent() {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
     }
     if (
-      (messageDeleted.deleted === true) &&
+      messageDeleted.deleted === true &&
       currentChat?._id === allUsers[value]?._id
     ) {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
     }
     if (
-      (messageEdited.edited === true) &&
+      messageEdited.edited === true &&
       currentChat?._id === allUsers[value]?._id
     ) {
       dispatch(getAllMessages({ from: currentUser._id, to: currentChat._id }));
@@ -86,7 +87,7 @@ function ChatComponent() {
     doScroll,
     messageDeleted,
     value,
-    messageEdited
+    messageEdited,
   ]);
 
   useEffect(() => {
@@ -194,7 +195,7 @@ function ChatComponent() {
 
   const onEditHandler = (messageId, newMessage) => {
     setMessageEdited({ id: messageId, edited: true });
-    dispatch(editMessage({messageId, newMessage}));
+    dispatch(editMessage({ messageId, newMessage }));
     const data = {
       from: currentUser._id,
       to: currentChat._id,
@@ -237,10 +238,10 @@ function ChatComponent() {
           overflowY: "scroll",
           height: "60vh",
           maxHeight: "60vh",
-          "&::-webkit-scrollbar": { width:'4px' },
+          "&::-webkit-scrollbar": { width: "4px" },
           "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
             borderRadius: 6,
-            backgroundColor: '#DDE7EE',
+            backgroundColor: "#DDE7EE",
             minHeight: 24,
             border: "none",
           },
@@ -255,16 +256,16 @@ function ChatComponent() {
         <TabList
           sticky="top"
           sx={{
-            overflow: 'auto',
-            scrollSnapType: 'x mandatory',
-            "&::-webkit-scrollbar": { maxWidth:'4px', maxHeight:'1px' },
+            overflow: "auto",
+            scrollSnapType: "x mandatory",
+            "&::-webkit-scrollbar": { maxWidth: "4px", maxHeight: "1px" },
             "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
-            borderRadius: 6,
-            backgroundColor: "#DDE7EE",
-            minHeight: 3,
-            minWidth:3,
-            border: "none",
-          },
+              borderRadius: 6,
+              backgroundColor: "#DDE7EE",
+              minHeight: 3,
+              minWidth: 3,
+              border: "none",
+            },
           }}
           underlinePlacement={{ top: "bottom", bottom: "top" }["top"]}
         >
@@ -302,7 +303,7 @@ function ChatComponent() {
             })}
         </TabPanel>
       </Tabs>
-      <Box sx={{ mt: 1}}>
+      <Box sx={{ mt: 1 }}>
         <ChatInput socket={socket} handleSendMsg={handleSendMsg} />
       </Box>
     </Box>

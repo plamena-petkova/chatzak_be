@@ -7,7 +7,7 @@ const initialState = {
   messages: [],
   isLoading: false,
   error: null,
-  newMessageIndicator: {show:false, id: ''},
+  newMessageIndicator: {},
 };
 
 export const getAllMessages = createAsyncThunk(
