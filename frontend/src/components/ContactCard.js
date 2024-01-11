@@ -15,7 +15,7 @@ function ContactCard({ contact }) {
   return (
     <Tab
       key={contact._id}
-      sx={isSmallScreen ? { maxWidth: 140 } : { minWidth: 270 }}
+      sx={isSmallScreen ? { maxWidth: 140, padding:'20px' } : { minWidth: 270, padding:'25px' }}
     >
       {onlineUser ? (
         <Badge
