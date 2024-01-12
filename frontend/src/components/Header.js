@@ -50,7 +50,7 @@ function Header() {
       >
         <Card
           sx={{
-            maxWidth: "30vw",
+            maxWidth: "70vw",
             minHeight: "20vh",
             borderRadius: "sm",
           }}
